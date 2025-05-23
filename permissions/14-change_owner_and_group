@@ -1,2 +1,2 @@
 #!/bin/bash
-chown vicent:staff *
+sudo ./14-change_owner_and_group
