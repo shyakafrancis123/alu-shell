@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -empty -print | awk -F/ '{print $NF}' | sort
+find . -empty -printf"%f\n"
