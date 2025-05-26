@@ -1,2 +1,2 @@
 #!/bin/bash
-alias gt='git add .'
+echo hello $USER
