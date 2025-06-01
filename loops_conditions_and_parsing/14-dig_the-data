@@ -1,14 +1,4 @@
 #!/usr/bin/env bash
 # Group IP and HTTP status from Apache logs by occurrence count and sort descending
-
-awk '
-   NF >= 9 && $1 ~ /^[0-9.]+$/ && $9 ~ /^[0-9]+$/ {
-    count[$1 FS $9]++
-  }
-  END {
-    for (key in count) {
-      print count[key], key
-    }
-  }
-' apache-access.log | sort -nr
-
+#final
+awk '{print $1 " " $9}' apache-access.log | sort | uniq -c | sort -rn
