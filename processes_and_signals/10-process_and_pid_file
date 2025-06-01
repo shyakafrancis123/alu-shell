@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
-#1 love you
-clean_up='rm /var/run/myscript.pid; exit $?'
+# Create PID file
+echo "$$" > /var/run/myscript.pid
 
-echo $$ > "/var/run/myscript.pid"
+# Define signal handlers
+trap 'echo "Y U no love me?!"' SIGINT
+trap 'echo "I hate the kill command"' SIGTERM
+trap 'rm -f /var/run/myscript.pid; exit 0' SIGQUIT
+
+# Infinite loop
+while true; do
+    echo "To infinity and beyond"
+    sleep 1
+done
+
