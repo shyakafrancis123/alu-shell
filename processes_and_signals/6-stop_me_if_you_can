@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+#display
+pkill -f "4-infinity_and_beyond"
