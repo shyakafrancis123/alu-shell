@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# Groups visitor IPs and HTTP status codes by occurrence count and sorts from highest to lowest
+# Groups IP and HTTP status from Apache logs by occurrence count, sorted descending
 
-awk '{ count[$1, $9]++ } 
-     END { 
-       for (key in count) {
-         split(key, arr, SUBSEP)
-         printf "%7d %s %s\n", count[key], arr[1], arr[2]
-       }
-     }' apache-access.log | sort -nr
+awk '
+  NF >= 9 && $1 ~ /^[0-9.]+$/ && $9 ~ /^[0-9]+$/ {
+    count[$1, $9]++
+  }
+  END {
+    for (key in count) {
+      split(key, arr, SUBSEP)
+      printf "%7d %s %s\n", count[key], arr[1], arr[2]
+      }
+  }
+' apache-access.log | sort -nr
 
