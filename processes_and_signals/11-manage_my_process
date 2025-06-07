@@ -1,32 +1,47 @@
 #!/usr/bin/env bash
+# Init-style script to start, stop, restart manage_my_process process
 
-PID_FILE="/var/run/my_process.pid"
+PIDFILE="/var/run/my_process.pid"
 PROCESS_PATH="$(pwd)/manage_my_process"
+
+start() {
+  "$PROCESS_PATH" &   # Start the process in background
+  echo $! > "$PIDFILE"
+  echo "manage_my_process started"
+}
+
+stop() {
+  if [ -f "$PIDFILE" ]; then
+    pid=$(cat "$PIDFILE")
+    if kill "$pid" 2>/dev/null; then
+      rm -f "$PIDFILE"
+      echo "manage_my_process stopped"
+    else
+      echo "Process not running"
+    fi
+  else
+    echo "PID file not found, process may not be running"
+  fi
+}
+
+restart() {
+  stop
+  start
+  echo "manage_my_process restarted"
+}
 
 case "$1" in
   start)
-    "$PROCESS_PATH" &
-    echo $! > "$PID_FILE"
-    echo "manage_my_process started"
+    start
     ;;
   stop)
-    if [ -f "$PID_FILE" ]; then
-      kill "$(cat "$PID_FILE")"
-      rm -f "$PID_FILE"
-      echo "manage_my_process stopped"
-    fi
+    stop
     ;;
-restart)
-     if [ -f "$PID_FILE" ]; then
-       kill "$($cat "$PID_FILE")"
-       rm -f "$PID_FILE"
-     fi
-     "$PROCESS_PATH" &
-     echo $! > "$PID_FILE"
-     echo "manage_my_process restarted"
-     ;;
-   *)
-     echo "Usage: manage_my_process {start|stop|restart}"
-     exit 1
-     ;; 
+  restart)
+    restart
+    ;;
+  *)
+    echo "Usage: manage_my_process {start|stop|restart}"
+    ;;
 esac
+
