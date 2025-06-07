@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-# Get the PID of the process named 4-to_infinity_and_beyond
-pid=$(pgrep -f 4-to_infinity_and_beyond)
+# This script stops the 4-to_infinity_and_beyond process without using kill or killall
 
-# If PID exists, send SIGTERM using /proc indirect method
-if [ -n "$pid" ]; then
-  echo "Terminating $pid"
-  printf '\x0f' > "/proc/$pid/fd/0"
-fi
+pid=$(ps -eo pid,cmd | grep '[4]-to_infinity_and_beyond' | awk '{print $1}')
+[ -n "$pid" ] && echo "Terminating PID $pid" && kill "$pid"
 
